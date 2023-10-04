@@ -84,6 +84,22 @@ public class jdbc_example {
     // close the connection
     // try-catch-finally block
     @Test
-    public void task() {
+    public void testTask() throws SQLException {
+        Connection connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet resultSet = statement.executeQuery("select count(customerNumber) as 'The number of Rows' from customers;");
+        try {
+            resultSet.next();
+            System.out.println("The number of the Rows= " + resultSet.getInt("The number of Rows"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            resultSet.close();
+            statement.close();
+            connection.close();
+            System.out.println("--- Closing the connection within finally block ---");
+        }
     }
+
+
 }
